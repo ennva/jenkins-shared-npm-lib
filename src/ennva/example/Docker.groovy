@@ -13,7 +13,7 @@ class Docker implements Serializable {
     def incrementVersion() {
         script.sh("npm version minor")
 
-        def packageJson = readJSON file: 'package.json'
+        def packageJson = script.readJSON file: 'package.json'
         def version = packageJson.version
 
         env.IMAGE_NAME = "${version}-$BUILD_NUMBER"
