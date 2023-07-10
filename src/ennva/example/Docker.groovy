@@ -41,7 +41,7 @@ class Docker implements Serializable {
     }
 
     def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
-        script.withCredentials([usernamePassword(credentialsId: 'gitlab-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
+        script.withCredentials([usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git config --global user.email "admin@gmail.com"')
             script.sh('git config --global user.name "admin"')
 
