@@ -16,7 +16,7 @@ class Docker implements Serializable {
         def packageJson = script.readJSON file: 'package.json'
         def version = packageJson.version
 
-        script.env.IMAGE_NAME = "${version}-$BUILD_NUMBER"
+        script.env.IMAGE_NAME = "${version}-$script.BUILD_NUMBER"
     }
 
     def runTests() {
