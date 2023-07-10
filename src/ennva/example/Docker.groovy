@@ -26,7 +26,7 @@ class Docker implements Serializable {
 
     def buildDockerImage(String host, String imageName) {
         script.echo "Building docker image"
-        script.sh "docker build -t $host/$imageName:${script.VERSION} ."
+        script.sh "docker build -t $host/$imageName:${script.env.IMAGE_NAME} ."
     }
 
     def dockerLogin(String host = '') {
@@ -37,7 +37,7 @@ class Docker implements Serializable {
     }
 
     def dockerPush(String host = '', String imageName) {
-        script.sh "docker push $host/$imageName:${script.VERSION}"
+        script.sh "docker push $host/$imageName:${script.env.IMAGE_NAME}"
     }
 
     def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
