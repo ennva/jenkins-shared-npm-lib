@@ -66,7 +66,7 @@ class Docker implements Serializable {
     def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
         script.withCredentials([script.usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git add .')
-            script.sh('git commit -m "ci: version updated to ${script.env.IMAGE_NAME}"')
+            script.sh("git commit -m 'ci: version updated to ${script.env.IMAGE_NAME}'")
             script.sh('git push origin HEAD:jenkins-jobs')
         }
     }
