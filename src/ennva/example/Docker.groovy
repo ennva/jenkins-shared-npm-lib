@@ -59,6 +59,7 @@ class Docker implements Serializable {
             script.sh('git config --global user.name "admin"')
             //script.sh("git remote set-url https://${USER}:${PWD}@gitlab.com/ennvadigit/node-project.git")
             script.sh("git remote set-url origin https://${script.USER}:${script.PWD}@$gitRepo")
+            script.sh('git pull')
         }
     }
 
