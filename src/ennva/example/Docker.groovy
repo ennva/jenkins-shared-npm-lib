@@ -10,13 +10,26 @@ class Docker implements Serializable {
         this.script = script;
     }
 
-    def incrementVersion() {
-        script.sh("npm version minor")
-
+    def setCurrentVersion() {
         def packageJson = script.readJSON file: 'package.json'
         def version = packageJson.version
 
         script.env.IMAGE_NAME = "${version}-$script.BUILD_NUMBER"
+    }
+
+    def incrementMajorVersion() {
+        script.sh("npm version major")
+        this.setCurrentVersion()
+    }
+
+    def incrementMinorVersion() {
+        script.sh("npm version minor")
+        this.setCurrentVersion()
+    }
+
+    def patchVersion() {
+        script.sh("npm version patch")
+        this.setCurrentVersion()
     }
 
     def runTests() {
@@ -40,13 +53,17 @@ class Docker implements Serializable {
         script.sh "docker push $host/$imageName:${script.env.IMAGE_NAME}"
     }
 
-    def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
+    def configureGitRepo(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
         script.withCredentials([script.usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git config --global user.email "admin@gmail.com"')
             script.sh('git config --global user.name "admin"')
-
             //script.sh("git remote set-url https://${USER}:${PWD}@gitlab.com/ennvadigit/node-project.git")
             script.sh("git remote set-url origin https://${script.USER}:${script.PWD}@$gitRepo")
+        }
+    }
+
+    def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
+        script.withCredentials([script.usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git add .')
             script.sh('git commit -m "ci: version updated to ${script.env.IMAGE_NAME}"')
             script.sh('git push origin HEAD:jenkins-jobs')
