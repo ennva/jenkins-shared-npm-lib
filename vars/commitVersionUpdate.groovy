@@ -2,6 +2,6 @@
 
 import ennva.example.Docker
 
-def call(String gitRepository) {
-    return new Docker(this).commitVersionUpdate(gitRepository)
+def call(String gitRepository, String branch) {
+    return new Docker(this).commitVersionUpdate(gitRepository, branch)
 }
