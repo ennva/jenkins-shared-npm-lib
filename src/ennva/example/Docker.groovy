@@ -53,21 +53,21 @@ class Docker implements Serializable {
         script.sh "docker push $host/$imageName:${script.env.IMAGE_NAME}"
     }
 
-    def configureGitRepo(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
+    def configureGitRepo(String gitRepo = 'gitlab.com/ennvadigit/node-project.git', String branch = 'jenkins-jobs') {
         script.withCredentials([script.usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git config --global user.email "admin@gmail.com"')
             script.sh('git config --global user.name "admin"')
             //script.sh("git remote set-url https://${USER}:${PWD}@gitlab.com/ennvadigit/node-project.git")
             script.sh("git remote set-url origin https://${script.USER}:${script.PWD}@$gitRepo")
-            script.sh('git pull origin jenkins-jobs')
+            script.sh("git pull origin $branch")
         }
     }
 
-    def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git') {
+    def commitVersionUpdate(String gitRepo = 'gitlab.com/ennvadigit/node-project.git', String branch = 'jenkins-jobs') {
         script.withCredentials([script.usernamePassword(credentialsId: 'gitlab-credential', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
             script.sh('git add .')
             script.sh("git commit -m 'ci: version updated to ${script.env.IMAGE_NAME}'")
-            script.sh('git push origin HEAD:jenkins-jobs')
+            script.sh("git push origin HEAD:$branch")
         }
     }
 }
